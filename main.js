@@ -14,6 +14,20 @@ const directions = [ 'toLeft', 'toRight', 'toTop', 'toBottom' ]
 
 console.log('jeu lancé')
 
+const maxSize = 1000
+const mqlMaxWidth = matchMedia(`(max-width: ${ maxSize }px)`)
+const mqlMaxHeight = matchMedia(`(max-height: ${ maxSize }px)`)
+const mqlOrientation = matchMedia('(orientation: portrait)')
+
+const isSmallScreen = () => {
+    
+}
+const isPortraitOrientation = () => {
+    const mql = matchMedia('(orientation: portrait)')
+    console.log(mql)
+}
+isPortraitOrientation()
+
 // Collection des murs axe horizontal droite-gauche
 const blockedSquaresToLeft = [
     {top:300, left:200},{top:500, left:200},{top:700, left:200},{top:200, left:300},{top:300, left:300},{top:500, left:300},{top:800, left:300},
@@ -56,9 +70,12 @@ const blockedSquaresToBottom = [
     {top:900, left:700}, {top:900, left:800}, {top:900, left:900}
 ]
 
+// À MODIFIER POUR LE RESPONSIVE (1/2)
 const getPositionOf = (element) => {
-    const top = parseInt(getComputedStyle(element, null).getPropertyValue('top'), 10)
-    const left = parseInt(getComputedStyle(element, null).getPropertyValue('left'), 10)
+    // const top = parseInt(getComputedStyle(element, null).getPropertyValue('top'), 10)
+    // const left = parseInt(getComputedStyle(element, null).getPropertyValue('left'), 10)
+    const top = Number(element.dataset.top)
+    const left = Number(element.dataset.left)
     return { top, left }
 }
 
@@ -86,18 +103,23 @@ const isTheCharacterBlocked = (characterPositon, movingDirection) => {
     })
 }
 
+// À MODIFIER POUR QUE LE RESPONSIVE FONCTIONNE : UTILISER L'ÉQUIVALENT DES VW ET WH CSS
 const move = (character, from, to) => {
     switch (to) {
         case 'toLeft':
+            character.dataset.left = from.left === 0 ? 900 : from.left - 100 
             character.style.left = from.left === 0 ? 900 + "px" : from.left - 100 + "px"
             break
         case 'toRight':
+            character.dataset.left = from.left === 900 ? 0 : from.left + 100
             character.style.left = from.left === 900 ? 0 : from.left + 100 + "px"
             break
         case 'toTop':
+            character.dataset.top = from.top - 100
             character.style.top = from.top - 100 + "px"
             break
         case 'toBottom':
+            character.dataset.top = from.top + 100
             character.style.top = from.top + 100 + "px"
             break
     }
@@ -167,11 +189,14 @@ addEventListener('keydown', e => {
     }
 })
 
+// À MODIFIER POUR LE RESPONSIVE (2/2)
 const displayDots = () => {
     for (let col = 0; col < 10; col++) {
         for (let row = 0; row < 10; row++) {
             const dot = document.createElement('div')
             dot.className = 'dot'
+            dot.dataset.top = row * 100
+            dot.dataset.left = col * 100
             dot.style.left = col * 100 + 'px'
             dot.style.top = row * 100 + 'px'
             map.insertBefore(dot, pacMan)
