@@ -1,0 +1,76 @@
+*,
+:before,
+:after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.map {
+    background-color: #0b0b0b;
+    width: 1000px;
+    height: 1000px;
+    position: relative;
+}
+
+img[src="./img/pacman.gif"] {
+    position: absolute;
+    top: 500px;
+    left: 500px;
+    padding: 15px;
+    width: 100px;
+}
+img[src="./img/red-ghost.png"] {
+    position: absolute;
+    top: 300px;
+    left: 400px;
+    width: 100px;
+    padding: 15px;
+}
+img[src="./img/pink-ghost.png"] {
+    position: absolute;
+    top: 300px;
+    left: 400px;
+    width: 100px;
+    padding: 15px;
+}
+img[src="./img/background.svg"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.dot {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+}
+.dot::before {
+    content: "";
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #ff6;
+}
+
+.toLeft {
+    transform: none;
+}
+.toTop {
+    transform: rotate(90deg);
+}
+.toRight {
+    transform: scale(-1, 1);
+}
+.toBottom {
+    transform: rotate(-90deg);
+}
