@@ -19,14 +19,34 @@ const mqlMaxWidth = matchMedia(`(max-width: ${ maxSize }px)`)
 const mqlMaxHeight = matchMedia(`(max-height: ${ maxSize }px)`)
 const mqlOrientation = matchMedia('(orientation: portrait)')
 
+// Les Media Query Lists ont la méthode .addListener() dont l’argument
+mqlMaxWidth.addListener(e => rearrangeElements())
+mqlMaxHeight.addListener(e => rearrangeElements())
+mqlOrientation.addListener(e => rearrangeElements())
+
+const rearrange = element => {
+    element.style.top = isSmallScreen() ? pxToViewportSize(element.dataset.top) + sizeUnit() : element.dataset.top + sizeUnit()
+    element.style.left = isSmallScreen() ? pxToViewportSize(element.dataset.left) + sizeUnit() : element.dataset.left + sizeUnit()
+}
+const rearrangeElements = () => {
+    const elements = document.querySelectorAll('[data-top][data-left]')
+    elements.forEach(element => rearrange(element))
+}
+
 const isSmallScreen = () => {
-    
+    const mql = isPortraitOrientation() ? mqlMaxWidth : mqlMaxHeight
+    return mql.matches
 }
 const isPortraitOrientation = () => {
-    const mql = matchMedia('(orientation: portrait)')
-    console.log(mql)
+    const mql = mqlOrientation
+    return mql.matches
 }
-isPortraitOrientation()
+const pxToViewportSize = px => 100 * px / maxSize
+const sizeUnit = () => {
+    let sizeUnit = 'px'
+    if (isSmallScreen()) sizeUnit = isPortraitOrientation() ? 'vw' : 'vh'
+    return sizeUnit
+}
 
 // Collection des murs axe horizontal droite-gauche
 const blockedSquaresToLeft = [
@@ -197,8 +217,8 @@ const displayDots = () => {
             dot.className = 'dot'
             dot.dataset.top = row * 100
             dot.dataset.left = col * 100
-            dot.style.left = col * 100 + 'px'
-            dot.style.top = row * 100 + 'px'
+            dot.style.left = isSmallScreen() ? col * pxToViewportSize(100) + sizeUnit() : col * 100 + 'px'
+            dot.style.top = isSmallScreen() ? row * pxToViewportSize(100) + sizeUnit() : row * 100 + 'px'
             map.insertBefore(dot, pacMan)
         }
     }
